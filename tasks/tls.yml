@@ -27,10 +27,10 @@
 - name: Generate private TLS key
   command: >-
     openssl genrsa
-    -out /etc/pki/tls/private/localhost.key
+    -out "{{ tls_key }}"
     2048
   args:
-    creates: /etc/pki/tls/private/localhost.key
+    creates: "{{ tls_key }}"
 
 - name: Copy openssl config file
   template:
@@ -42,21 +42,21 @@
     openssl req
     -config /root/openssl.req.conf
     -new
-    -key /etc/pki/tls/private/localhost.key
-    -out /etc/pki/tls/private/localhost.csr
+    -key "{{ tls_key }}"
+    -out "{{ tls_csr }}"
   args:
-    creates: /etc/pki/tls/private/localhost.csr
+    creates: "{{ tls_csr }}"
 
 - name: Generate self-signed TLS key
   command: >-
     openssl x509
     -req
     -days 365
-    -in /etc/pki/tls/private/localhost.csr
-    -signkey /etc/pki/tls/private/localhost.key
-    -out /etc/pki/tls/certs/localhost.crt
+    -in "{{ tls_csr }}"
+    -signkey "{{ tls_key }}"
+    -out "{{ tls_crt }}"
   args:
-    creates: /etc/pki/tls/certs/localhost.crt
+    creates: "{{ tls_crt }}"
 
 # Ansible thinks restorecon always changes something.
 # I believe that with the -v flag, empty stdout and rc==0

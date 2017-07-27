@@ -1,4 +1,6 @@
 ---
+- include_vars: "{{ ansible_os_distribution }}.yml"
+
 # Fix man and perldoc escape sequence processing
 - name: Push pager.sh
   template:
