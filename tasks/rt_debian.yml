@@ -37,7 +37,7 @@
 - name: Configure RT
   shell: |
     source ${PERLBREW_ROOT}/etc/bashrc
-    perlbrew switch 5.10.1
+    perlbrew switch 5.22.1
     ./configure \
     --enable-developer \
     --enable-graphviz \
@@ -51,7 +51,7 @@
 - name: Test RT dependencies
   shell: |
     source ${PERLBREW_ROOT}/etc/bashrc
-    perlbrew switch 5.10.1
+    perlbrew switch {{ perl_version }}
     make testdeps
   args:
     chdir: /opt/src/{{ rt_version }}
@@ -65,13 +65,13 @@
     - name: Install pinned CPAN packages
       shell: |
         source ${PERLBREW_ROOT}/etc/bashrc
-        perlbrew switch 5.10.1
+        perlbrew switch {{ perl_version }}
         cpanm {{ cpanm_notest | ternary('--notest','--no-notest') }} {{ item }}
       register: perlbrew_cpanm_result
       changed_when: >
         perlbrew_cpanm_result|success and
         perlbrew_cpanm_result.stdout_lines|length > 1
-      with_items: "{{ perl_5_10_1 }}"
+      with_items: "{{ perl_5_22_1 }}"
 
     - name: Fix RT dependencies
       environment:
@@ -79,7 +79,7 @@
         PERL_CPANM_OPT: "{{ cpanm_notest | ternary('--notest','--no-notest') }}"
       shell: |
         source ${PERLBREW_ROOT}/etc/bashrc
-        perlbrew switch 5.10.1
+        perlbrew switch {{ perl_version }}
         make -j {{ansible_processor_vcpus + 1 }} fixdeps
       args:
         chdir: /opt/src/{{ rt_version }}
@@ -91,7 +91,7 @@
 - name: "Install DateTime::Set"
   shell: |
     source ${PERLBREW_ROOT}/etc/bashrc
-    perlbrew switch 5.10.1
+    perlbrew switch {{ perl_version }}
     cpanm {{ cpanm_notest | ternary('--notest','--no-notest') }} DateTime::Set
   register: datetime_set_result
   changed_when: >
@@ -101,7 +101,7 @@
 - name: Install RT
   shell: |
     source ${PERLBREW_ROOT}/etc/bashrc
-    /usr/local/bin/perlbrew switch 5.10.1
+    /usr/local/bin/perlbrew switch {{ perl_version }}
     make install
   args:
     chdir: /opt/src/{{ rt_version }}
@@ -152,7 +152,7 @@
 - name: Initialize RT database
   shell: |-
     source ${PERLBREW_ROOT}/etc/bashrc
-    perlbrew use 5.10.1
+    perlbrew use {{ perl_version }}
     echo {{ mysql_root_password }} | make initialize-database
   args:
     chdir: /opt/src/{{ rt_version }}
