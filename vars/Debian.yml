@@ -1,2 +1,3 @@
-tls_key_path:
-tls_cert_path:
+tls_key: /etc/ssl/private/localhost.key
+tls_csr: /etc/ssl/private/localhost.csr
+tls_crt: /etc/ssl/private/localhost.crt
