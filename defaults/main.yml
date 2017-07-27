@@ -1,5 +1,5 @@
 ---
-rt_version: rt-4.4.1
+rt_version: rt-4.4.2
 rt_name: My RT
 rt_hostname: "{{ ansible_hostname }}"
 rt_webpath:
