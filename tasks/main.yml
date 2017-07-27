@@ -11,11 +11,8 @@
     state: installed
   when: ansible_os_family == "RedHat"
 
-- name: Install policycoreutils-python (redhat)
-  apt: name=policycoreutils-python state=present update_cache=yes cache_valid_time={{ apt_cache_valid_time }}
-  when: ansible_os_family == "Debian"
-
 - include: local_facts.yml
+  when: ansible_os_family == "RedHat"
 
 - name: Setup SELinux for RT
   include: selinux.yml
@@ -26,11 +23,13 @@
     dest: /etc/yum.conf
     regexp: ^keepcache=0$
     replace: keepcache=1
+  when: ansible_os_family == "RedHat"
 
 - name: Install CentOS Development tools
   yum:
     name: "@Development tools"
     state: installed
+  when: ansible_os_family == "RedHat"
 
 - name: Setup TLS
   include: tls.yml
