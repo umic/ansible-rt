@@ -1,5 +1,5 @@
 ---
-- name: Install RPM deps for RT
+- name: Install RPM deps for RT (RedHat)
   yum:
     name: "{{ item }}"
     state: installed
@@ -10,6 +10,20 @@
     - expat-devel
     - gd-devel
     - mariadb-devel
+  when: ansible_os_family == "RedHat"
+
+- name: Install RPM deps for RT (Debian)
+  apt:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - openssl-devel
+    - graphviz-devel
+    - libxml2-devel
+    - expat-devel
+    - gd-devel
+    - mariadb-devel
+  when: ansible_os_family == "Debian"
 
 - name: Create /opt/src
   file:
