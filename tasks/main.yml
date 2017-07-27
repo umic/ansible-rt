@@ -5,10 +5,15 @@
     src: pager.sh
     dest: /etc/profile.d/pager.sh
 
-- name: Install policycoreutils-python
+- name: Install policycoreutils-python (redhat)
   yum:
     name: policycoreutils-python
     state: installed
+  when: ansible_os_family == "RedHat"
+
+- name: Install policycoreutils-python (redhat)
+  apt: name=policycoreutils-python state=present update_cache=yes cache_valid_time={{ apt_cache_valid_time }}
+  when: ansible_os_family == "Debian"
 
 - include: local_facts.yml
 
