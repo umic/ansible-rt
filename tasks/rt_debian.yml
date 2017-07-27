@@ -2,12 +2,12 @@
 - name: Install package deps for RT
   apt: name={{ item }} state=present update_cache=yes cache_valid_time={{ apt_cache_valid_time }}
   with_items:
-    - openssl-devel
-    - graphviz-devel
-    - libxml2-devel
-    - expat-devel
-    - gd-devel
-    - mariadb-devel
+    - libssl-dev
+    - graphviz-dev
+    - libxml2-dev
+    - libexpat1-dev
+    - libgd-dev
+    - libmariadbclient-dev
 
 - name: Create /opt/src
   file:
