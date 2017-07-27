@@ -47,7 +47,7 @@
 - name: Configure RT
   shell: |
     source ${PERLBREW_ROOT}/etc/bashrc
-    perlbrew switch 5.22.1
+    perlbrew switch perl-{{ perl_version }}
     ./configure \
     --enable-developer \
     --enable-graphviz \
@@ -60,7 +60,7 @@
 
 - name: Test RT dependencies
   shell: |
-    source ${PERLBREW_ROOT}/etc/bashrc
+    source /root/perl5/perlbrew/etc/bashrc
     perlbrew switch {{ perl_version }}
     make testdeps
   args:
