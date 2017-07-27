@@ -8,7 +8,7 @@
 
 - name: Enable MariaDB
   service:
-    name: mariadb
+    name: mysql
     enabled: yes
 
 - name: Start MariaDB
