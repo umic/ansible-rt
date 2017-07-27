@@ -34,6 +34,11 @@
     owner: root
     group: root
 
+- name: Initialise perlbrew
+  shell: perlbrew init
+  args:
+    creates: /root/perl5/perlbrew
+ 
 - name: Configure RT
   shell: |
     source ${PERLBREW_ROOT}/etc/bashrc
