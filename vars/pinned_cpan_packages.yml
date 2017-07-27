@@ -7,3 +7,8 @@ perl_5_10_1:
   - Test::Expect@0.32
   - Starlet@0.19
   - Mail::Header@2.14
+perl_5_22_1:
+  - Test::Expect@0.32
+  - Starlet@0.19
+  - Mail::Header@2.14
+
