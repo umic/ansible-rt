@@ -7,7 +7,7 @@
     - libxml2-dev
     - libexpat1-dev
     - libgd-dev
-    - libmariadbclient-dev
+    - libmariadb-client-lgpl-dev
 
 - name: Create /opt/src
   file:
