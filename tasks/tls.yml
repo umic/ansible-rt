@@ -4,21 +4,25 @@
     key: https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
     state: present
     validate_certs: yes
+  when: ansible_os_family == "RedHat"
 
 - name: Install haveged from EPEL
   yum:
     name: https://dl.fedoraproject.org/pub/epel/7/x86_64/h/haveged-1.9.1-1.el7.x86_64.rpm
     state: present
+  when: ansible_os_family == "RedHat"
 
 - name: Enable haveged
   service:
     name: haveged
     enabled: yes
+  when: ansible_os_family == "RedHat"
 
 - name: Start haveged
   service:
     name: haveged
     state: started
+  when: ansible_os_family == "RedHat"
 
 - name: Generate private TLS key
   command: >-
