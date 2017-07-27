@@ -37,13 +37,13 @@
     state: installed
   when: ansible_os_family == "RedHat"
 
-- name: Install Apache
+- name: Setup Apache
   include: apache.yml
 
 - name: Setup TLS
   include: tls.yml
 
-- name: Install MariaDB
+- name: Setup MariaDB
   include: mysql.yml
 
 - name: Install RT
