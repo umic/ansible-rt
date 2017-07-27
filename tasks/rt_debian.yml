@@ -8,6 +8,7 @@
     - libexpat1-dev
     - libgd-dev
     - libmariadb-client-lgpl-dev
+    - perlbrew
 
 - name: Create /opt/src
   file:
