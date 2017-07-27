@@ -13,6 +13,10 @@
     state: installed
   when: ansible_os_family == "RedHat"
 
+- name: Install policycoreutils (debian)
+  apt: name=policycoreutils  state=present update_cache=yes cache_valid_time={{ apt_cache_valid_time }}
+  when: ansible_os_family == "Debian"
+
 - include: local_facts.yml
   when: ansible_os_family == "RedHat"
 
