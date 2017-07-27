@@ -2,9 +2,9 @@
 - name: Install mariadb-server
   apt:
     pkg: mariadb-server
-    state: presen
+    state: present
     update_cache: yes
-    cache_valid_time: {{ apt_cache_valid_time }}
+    cache_valid_time: "{{ apt_cache_valid_time }}"
 
 - name: Enable MariaDB
   service:
