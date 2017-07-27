@@ -38,7 +38,12 @@
   shell: perlbrew init
   args:
     creates: /root/perl5/perlbrew
- 
+
+- name: Install correct verion of perl
+  shell: perlbrew install {{ perl_version }} 
+  args:
+    creates: /root/perl5/perlbrew/build.perl-5.22.1.log 
+
 - name: Configure RT
   shell: |
     source ${PERLBREW_ROOT}/etc/bashrc
