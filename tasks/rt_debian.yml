@@ -8,7 +8,7 @@
     - libexpat1-dev
     - libgd-dev
     - libmariadb-client-lgpl-dev
-    - perlbrew
+    - libcrypt-ssleay-perl
 
 - name: Create /opt/src
   file:
@@ -34,21 +34,8 @@
     owner: root
     group: root
 
-- name: Initialise perlbrew
-  shell: perlbrew init
-  args:
-    creates: /root/perl5/perlbrew
-
-- name: Install correct verion of perl
-  shell: perlbrew install {{ perl_version }} 
-  args:
-    creates: /root/perl5/perlbrew/build.perl-5.22.1.log 
-
 - name: Configure RT
-  shell: |
-    source ${PERLBREW_ROOT}/etc/bashrc
-    perlbrew switch perl-{{ perl_version }}
-    ./configure \
+  shell: ./configure \
     --enable-developer \
     --enable-graphviz \
     --enable-gd
@@ -59,66 +46,12 @@
     creates: /opt/src/{{ rt_version }}/config.status
 
 - name: Test RT dependencies
-  shell: |
-    source /root/perl5/perlbrew/etc/bashrc
-    perlbrew switch {{ perl_version }}
-    make testdeps
+  shell: make testdeps
   args:
     chdir: /opt/src/{{ rt_version }}
   register: rt_testdeps
   changed_when: False
   failed_when: False
-
-- include_vars: pinned_cpan_packages.yml
-  
-- block:
-    - name: Install pinned CPAN packages
-      shell: |
-        source ${PERLBREW_ROOT}/etc/bashrc
-        perlbrew switch {{ perl_version }}
-        cpanm {{ cpanm_notest | ternary('--notest','--no-notest') }} {{ item }}
-      register: perlbrew_cpanm_result
-      changed_when: >
-        perlbrew_cpanm_result|success and
-        perlbrew_cpanm_result.stdout_lines|length > 1
-      with_items: "{{ perl_5_22_1 }}"
-
-    - name: Fix RT dependencies
-      environment:
-        RT_FIX_DEPS_CMD: /opt/perl5/bin/cpanm
-        PERL_CPANM_OPT: "{{ cpanm_notest | ternary('--notest','--no-notest') }}"
-      shell: |
-        source ${PERLBREW_ROOT}/etc/bashrc
-        perlbrew switch {{ perl_version }}
-        make -j {{ansible_processor_vcpus + 1 }} fixdeps
-      args:
-        chdir: /opt/src/{{ rt_version }}
-
-  when: rt_testdeps|failed
-
-  # Several extensions depend on this module, which make fixdeps does
-  # not install
-- name: "Install DateTime::Set"
-  shell: |
-    source ${PERLBREW_ROOT}/etc/bashrc
-    perlbrew switch {{ perl_version }}
-    cpanm {{ cpanm_notest | ternary('--notest','--no-notest') }} DateTime::Set
-  register: datetime_set_result
-  changed_when: >
-    datetime_set_result|success and
-    datetime_set_result.stdout_lines|length > 1
-
-- name: Install RT
-  shell: |
-    source ${PERLBREW_ROOT}/etc/bashrc
-    /usr/local/bin/perlbrew switch {{ perl_version }}
-    make install
-  args:
-    chdir: /opt/src/{{ rt_version }}
-    creates: /opt/rt4
-
-- debug:
-    msg: "TODO: Assemble RT_SiteConfig.pm from parts to avoid clobbering local changes"
 
 - name: Install RT_SiteConfig.pm
   template:
